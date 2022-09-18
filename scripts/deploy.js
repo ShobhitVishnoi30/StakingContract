@@ -15,12 +15,22 @@ async function main() {
 
   const accounts = await hre.ethers.getSigners();
 
+  const StakingToken = await hre.ethers.getContractFactory("StakingToken");
+  const stakingToken = await StakingToken.deploy();
+
+  await stakingToken.deployed();
+
+  const RewardToken = await hre.ethers.getContractFactory("RewardToken");
+  const rewardToken = await RewardToken.deploy();
+
+  await rewardToken.deployed();
+
   // We get the contract to deploy
   const StakingRewards = await hre.ethers.getContractFactory("StakingRewards");
   const stakingReward = await StakingRewards.deploy(
     accounts[0].address,
-    "",
-    ""
+    rewardToken.address,
+    stakingToken.address
   );
 
   await stakingReward.deployed();
